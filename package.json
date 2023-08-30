@@ -1,0 +1,32 @@
+{
+  "name": "eccy",
+  "version": "1.0.0",
+  "description": "A simple ECS that you should probably not use",
+  "exports": {
+    ".": {
+      "types": "dist/index.d.ts",
+      "default": "dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"node ./dist/testbed/entry.js\"",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "type": "module",
+  "keywords": ["ECS", "Entity", "Component", "System"],
+  "author": "Wouter <dev@woubuc.be>",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.21",
+    "tslib": "^2.6.2",
+    "type-fest": "^4.3.1",
+    "typescript-tuple": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.7",
+    "ts-node-dev": "^2.0.0",
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.1.6"
+  }
+}
