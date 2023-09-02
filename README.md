@@ -31,20 +31,19 @@ class Position {
 ```ts
 class RenderSystem extends System {
   // Create your queries
-  private data = this.query(q => q
-    .select(Position), // We want all entities with a `Position` component
-  );
+  private positions = Query.entities()
+    .select(Position)
+    .query();
 
   public override run() {
     // Iterate over the query results
-    for (let [id, position] of this.data()) {
+    for (let [position] of this.positions) {
       position.x++;
-      console.log('entity', id, 'at', position);
     }
   }
 }
 
-
+@system({ runOnce: true })
 class StartupSystem extends System {
   public override run(cmd: Commands) {
     // Spawn a new entity with a component
@@ -56,13 +55,11 @@ class StartupSystem extends System {
 ##### 3. Configure the engine
 ```ts
 let engine = new Engine()
-  // A startup system runs once on startup
-  .startup(new StartupSystem())
-  // Other systems run every tick
-  .with(new RenderSystem());
+  .system(StartupSystem, RenderSystem)
+  .finalise();
 ```
 
 ##### 4. Ready, set, go!
 ```ts
-engine.run(60); // Cause we want 60 fps
+await engine.run(60); // Try to run at 60 fps
 ```
