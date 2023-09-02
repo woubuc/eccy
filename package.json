@@ -26,6 +26,9 @@
     "bench": "pnpm build && node dist/benchmarks/bench.js",
     "build": "trash dist/* && tsc",
     "dev": "tsc-watch --onSuccess \"node ./dist/testbed/entry.js\"",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "test": "pnpm build && c8 \"ava dist/**/*.test.js\" --src=dist --all",
     "preinstall": "npx only-allow pnpm",
     "prepack": "pnpm test && pnpm build"
@@ -56,6 +59,15 @@
     "ts-node-dev": "^2.0.0",
     "tsc-watch": "^6.0.4",
     "tsx": "^3.12.7",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vitepress": "1.0.0-rc.10"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@algolia/client-search",
+        "search-insights"
+      ]
+    }
   }
 }
