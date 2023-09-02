@@ -9,24 +9,52 @@
     }
   },
   "scripts": {
+    "build": "tsc",
     "dev": "tsc-watch --onSuccess \"node ./dist/testbed/entry.js\"",
+    "test": "ava src/**/*.ts",
     "preinstall": "npx only-allow pnpm"
   },
+  "engines": {
+    "node": ">=18 <20"
+  },
   "type": "module",
-  "keywords": ["ECS", "Entity", "Component", "System"],
+  "keywords": [
+    "ECS",
+    "Entity",
+    "Component",
+    "System"
+  ],
   "author": "Wouter <dev@woubuc.be>",
   "license": "UNLICENSED",
   "dependencies": {
+    "@woubuc/multimap": "^2.1.0",
+    "chalk": "^5.3.0",
+    "date-fns": "^2.30.0",
+    "eventemitter3": "^5.0.1",
+    "on-change": "^4.0.2",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.21",
+    "stringify-object": "^5.0.0",
     "tslib": "^2.6.2",
     "type-fest": "^4.3.1",
     "typescript-tuple": "^5.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.5.7",
+    "@types/stringify-object": "^4.0.2",
+    "ava": "^5.3.1",
     "ts-node-dev": "^2.0.0",
     "tsc-watch": "^6.0.4",
+    "tsx": "^3.12.7",
     "typescript": "^5.1.6"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--loader=tsx",
+      "--no-warnings"
+    ]
   }
 }

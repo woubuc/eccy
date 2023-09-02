@@ -1,7 +1,10 @@
+import { Class } from 'type-fest';
+import { ComponentManager } from '../component/manager.js';
 import { componentRegistry } from '../decorators/component.js';
-import { ComponentMask } from '../helpers/component-mask.js';
+import { EccyLogger } from '../logger.js';
+import { ResourceManager } from '../resource/manager.js';
+import { Resource } from '../resource/resource.js';
 import { SystemCommands } from '../system/commands.js';
-import { EntityData } from './entity.js';
 import { EntityId, IdProvider } from './id.js';
 
 /**
@@ -9,28 +12,26 @@ import { EntityId, IdProvider } from './id.js';
  * create, serialise, and deserialise entities.
  */
 export class World {
-	private entities: Map<EntityId, EntityData> = new Map();
+
+	private readonly logger: EccyLogger;
+
 	private entityIds = new IdProvider<EntityId>();
 
-	/**
-	 * Iterate over all entities in the world
-	 */
-	public iterateEntities(): IterableIterator<[EntityId, EntityData]> {
-		return this.entities.entries();
+	public readonly resources: ResourceManager;
+	public readonly components: ComponentManager;
+
+	public constructor(rootLogger: EccyLogger, resources: Set<Class<Resource>>) {
+		this.logger = rootLogger.child('world');
+
+		this.resources = new ResourceManager(rootLogger, resources);
+		this.components = new ComponentManager(rootLogger);
 	}
 
 	/**
 	 * Adds an empty entity to the world
 	 */
-	public addEntity(): EntityId {
-		let id = this.entityIds.next();
-
-		this.entities.set(id, {
-			componentMask: new ComponentMask(),
-			componentData: new Map(),
-		});
-
-		return id;
+	public createEmptyEntity(): EntityId {
+		return this.entityIds.next();
 	}
 
 	/**
@@ -38,22 +39,17 @@ export class World {
 	 */
 	public applyPending(cmd: SystemCommands) {
 		for (let e of cmd.entities) {
-			let entity = this.entities.get(e.id);
-			if (entity == undefined) {
-				throw new ReferenceError('missing entity: ' + e.id);
-			}
+			let entity = e.id;
 
 			for (let change of e.pending) {
 				if ('add' in change) {
 					let id = componentRegistry.lookupId(change.add.constructor);
-					entity.componentData.set(id, change.add);
-					entity.componentMask.set(id, true);
+					this.components.add(entity, id, change.add);
 					continue;
 				}
 
 				if ('remove' in change) {
-					entity.componentData.delete(change.remove);
-					entity.componentMask.set(change.remove, false);
+					this.components.remove(entity, change.remove);
 					continue;
 				}
 			}
@@ -62,3 +58,4 @@ export class World {
 		cmd.entities = [];
 	}
 }
+

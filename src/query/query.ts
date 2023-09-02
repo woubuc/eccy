@@ -1,100 +1,48 @@
-import { Class } from 'type-fest';
-import { Concat, ConcatMultiple } from 'typescript-tuple';
-import { EntityId } from '../engine/id.js';
-import { World } from '../engine/world.js';
-import { BasicFilter, QueryFilter, WithoutFilter } from './filter.js';
-import { BasicSelector, OptionalSelector, QuerySelector } from './selector.js';
+import { Class, ReadonlyDeep } from 'type-fest';
+import { Resource } from '../resource/resource.js';
+import { EntityQueryBuilder, EntityQueryBuilderImpl } from './entity.js';
+import { ResourceQueryBuilder, ResourceQueryBuilderImpl } from './resource.js';
 
 /**
- * Select the entity even if it does not have the given component. In place of the component, `null` will be returned.
- * @param component
+ * Start point for all system queries
  */
-export function optional<T>(component: Class<T>): QuerySelector<T | undefined> {
-	return new OptionalSelector(component);
-}
-
-/**
- * Filter out all entities that have the given component
- *
- * @param component - Component to filter out
- */
-export function not<T>(component: Class<T>): QueryFilter {
-	return new WithoutFilter(component);
-}
-
-/**
- * The query builder API
- */
-export interface QueryBuilder<TSelected extends any[] = [EntityId]> {
+export class Query {
 	/**
-	 * Selects components to be returned from the query
-	 *
-	 * Entities without these components will be excluded from the results.
-	 *
-	 * @param selectors - One or more component classes
+	 * Starts an entity query builder
 	 */
-	select<TAdd extends any[]>(...selectors: SelectorList<TAdd>): QueryBuilder<Concat<TSelected, ConcatMultiple<[TAdd]>>>;
+	public static entities(): EntityQueryBuilder<[]> {
+		return new EntityQueryBuilderImpl() as any; // TODO tighten up types
+	}
 
 	/**
-	 * Requires that the entity has these components
+	 * Starts a resource query builder
 	 *
-	 * @param filters - One or more component classes
+	 * @param resource - The resource to query
 	 */
-	where(...filters: FilterList): this;
+	public static resource<T extends Resource>(resource: Class<T>): ResourceQueryBuilder<T, ReadonlyDeep<T>> {
+		return new ResourceQueryBuilderImpl(resource);
+	}
+
+	// We mark the constructor private cause the end user should not be
+	// creating any instances of this class.
+	//
+	// noinspection JSUnusedLocalSymbols
+	private constructor() {}
 }
 
 /**
- * A list of query selectors, or plain component constructors
+ * Internal query API
  *
- * Component constructors get converted into basic selectors.
+ * @internal
  */
-type SelectorList<T extends any[]> = {
-	[K in keyof T]: Class<T[K]> | QuerySelector<T[K]>;
-}
+export interface InternalQuery {
+	/**
+	 * Called immediately before the system is executed
+	 */
+	beforeSystem(): void;
 
-/**
- * A list of query filters, or plain component constructors
- *
- * Component constructors get converted into basic filters.
- */
-type FilterList = (Class<any> | QueryFilter)[];
-
-
-export class Query<T extends any[] = [EntityId]> implements QueryBuilder<T> {
-	public selectors: QuerySelector<any>[] = [];
-	public filters: QueryFilter[] = [];
-
-	public select<TAdd extends any[]>(...selectors: SelectorList<TAdd>): QueryBuilder<Concat<T, ConcatMultiple<[TAdd]>>> {
-		this.selectors.push(...selectors.map(selectorOrComponent => {
-			if (selectorOrComponent instanceof QuerySelector) {
-				return selectorOrComponent;
-			} else {
-				return new BasicSelector(selectorOrComponent);
-			}
-		}));
-		return this as any;
-	}
-
-	public where(...filters: FilterList): this {
-		this.filters.push(...filters.map(filterOrComponent => {
-			if (filterOrComponent instanceof QueryFilter) {
-				return filterOrComponent;
-			} else {
-				return new BasicFilter(filterOrComponent);
-			}
-		}));
-
-		return this;
-	}
-
-	public* execute(world: World): Generator<T> {
-		for (let [id, entity] of world.iterateEntities()) {
-			let satisfiesFilter = this.filters.every(f => f.filter(entity, id));
-			if (!satisfiesFilter) {
-				continue;
-			}
-
-			yield [id, ...this.selectors.map(s => s.select(entity, id))] as any;
-		}
-	}
+	/**
+	 * Called immediately after the system is executed
+	 */
+	afterSystem(): void;
 }

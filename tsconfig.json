@@ -23,7 +23,6 @@
     "forceConsistentCasingInFileNames": true,
 
     "strict": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,

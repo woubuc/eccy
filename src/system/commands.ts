@@ -8,8 +8,8 @@ import { World } from '../engine/world.js';
  *
  * Systems shouldn't manipulate the ECS world state directly. Instead, they
  * should use the Commands API to issue commands that get resolved after
- * running. This lets the ECS runtime prepare queries and schedule systems in
- * a more optimised way.
+ * system execution. This lets the ECS engine prepare queries and schedule
+ * systems in a more optimised way.
  */
 export interface Commands {
 	/**
@@ -48,7 +48,7 @@ export class SystemCommands implements Commands {
 	public constructor(private readonly world: World) {}
 
 	public spawn(...components: any[]): EntityId {
-		let id = this.world.addEntity();
+		let id = this.world.createEmptyEntity();
 		this.entity(id).add(...components);
 		return id;
 	}

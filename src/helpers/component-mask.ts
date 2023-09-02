@@ -7,6 +7,19 @@ export class ComponentMask {
 	private mask: number = 0;
 
 	/**
+	 * Constructs a mask
+	 *
+	 * @param from - All IDs in this iterator will be enabled
+	 */
+	public constructor(from?: Iterable<ComponentId>) {
+		if (from != undefined) {
+			for (let id of from) {
+				this.set(id, true);
+			}
+		}
+	}
+
+	/**
 	 * Sets or clears the component from the mask
 	 *
 	 * @param id - Component ID to update

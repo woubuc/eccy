@@ -34,6 +34,5 @@ export function component(config: ComponentConfig = {}) {
 		let meta: ComponentMeta<T> = { id, config, constructor };
 
 		componentRegistry.register(id, constructor, meta);
-		console.log('Registered component %s', constructor.name);
 	};
 }
