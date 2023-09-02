@@ -1,8 +1,13 @@
 {
   "name": "eccy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple ECS (experimental, you should probably not use this yet)",
-  "keywords": ["ECS", "Entity", "Component", "System"],
+  "keywords": [
+    "ECS",
+    "Entity",
+    "Component",
+    "System"
+  ],
   "license": "LGPL-3.0-or-later",
   "author": "@woubuc <eccy@woubuc.be>",
   "type": "module",
