@@ -1,16 +1,10 @@
 # Eccy
-A very experimental ECS that you should probably not use.
+[![npm](https://img.shields.io/npm/v/eccy?style=for-the-badge)](https://www.npmjs.com/package/eccy)
 
-## Development
-- Node LTS probably
-- Use [pnpm](https://pnpm.io/)
-- Respect [editorconfig](https://editorconfig.org/) & existing code style
-- Prefer [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+*Yet Another ECS Library*
 
-```shell
-$ pnpm install
-$ pnpm dev
-```
+## Status
+Very experimental, early development. You probably shouldn't use this for any real stuff just yet.
 
 ## How to use
 

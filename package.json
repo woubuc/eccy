@@ -1,7 +1,7 @@
 {
   "name": "eccy",
   "version": "0.0.2",
-  "description": "A simple ECS (experimental, you should probably not use this yet)",
+  "description": "Yet Another ECS Library",
   "keywords": [
     "ECS",
     "Entity",
