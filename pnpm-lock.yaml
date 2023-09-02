@@ -13,6 +13,7 @@ specifiers:
   reflect-metadata: ^0.1.13
   source-map-support: ^0.5.21
   stringify-object: ^5.0.0
+  tinybench: ^2.5.0
   trash-cli: ^5.0.0
   ts-node-dev: ^2.0.0
   tsc-watch: ^6.0.4
@@ -40,6 +41,7 @@ devDependencies:
   c8: 8.0.1
   reflect-metadata: 0.1.13
   source-map-support: 0.5.21
+  tinybench: 2.5.0
   trash-cli: 5.0.0
   ts-node-dev: 2.0.0_yph7ydtg2jnjtc2tqcylvuiqfq
   tsc-watch: 6.0.4_typescript@5.2.2
@@ -2111,6 +2113,10 @@ packages:
   /time-zone/1.0.0:
     resolution: {integrity: sha512-TIsDdtKo6+XrPtiTm1ssmMngN1sAhyKnTO2kunQWqNPWIVvCm15Wmw4SWInwTVgJ5u/Tr04+8Ei9TNcw4x4ONA==}
     engines: {node: '>=4'}
+    dev: true
+
+  /tinybench/2.5.0:
+    resolution: {integrity: sha512-kRwSG8Zx4tjF9ZiyH4bhaebu+EDz1BOx9hOigYHlUW4xxI/wKIUQUqo018UlU4ar6ATPBsaMrdbKZ+tmPdohFA==}
     dev: true
 
   /to-regex-range/5.0.1:
