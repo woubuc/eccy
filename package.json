@@ -31,7 +31,8 @@
     "build": "trash dist/* && tsc",
     "dev": "tsc-watch --onSuccess \"node ./dist/testbed/entry.js\"",
     "test": "pnpm build && c8 \"ava dist/**/*.test.js\" --src=dist --all",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "prepack": "pnpm test && pnpm build"
   },
   "engines": {
     "node": ">=18 <20"
