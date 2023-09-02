@@ -1,6 +1,6 @@
 {
   "name": "eccy",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A simple ECS that you should probably not use",
   "exports": {
     ".": {
@@ -8,6 +8,11 @@
       "default": "dist/index.js"
     }
   },
+  "files": [
+    "dist/**/*",
+    "!dist/**/*.test.*",
+    "!dist/testbed/**/*"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc-watch --onSuccess \"node ./dist/testbed/entry.js\"",
@@ -32,14 +37,14 @@
     "date-fns": "^2.30.0",
     "eventemitter3": "^5.0.1",
     "on-change": "^4.0.2",
-    "reflect-metadata": "^0.1.13",
-    "source-map-support": "^0.5.21",
     "stringify-object": "^5.0.0",
     "tslib": "^2.6.2",
     "type-fest": "^4.3.1",
     "typescript-tuple": "^5.0.1"
   },
   "devDependencies": {
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.21",
     "@types/node": "^20.5.7",
     "@types/stringify-object": "^4.0.2",
     "ava": "^5.3.1",
