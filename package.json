@@ -2,6 +2,7 @@
   "name": "eccy",
   "version": "0.0.1",
   "description": "A simple ECS that you should probably not use",
+  "license": "LGPL-3.0-or-later",
   "exports": {
     ".": {
       "types": "dist/index.d.ts",
