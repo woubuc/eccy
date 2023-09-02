@@ -23,11 +23,11 @@ export class ComponentManager {
 	}
 
 	public tryGet<T extends object>(entity: EntityId, component: ComponentId): T {
-		return this.components[component]?.[entity];
+		return this.components[entity]?.[component];
 	}
 
 	public get<T extends object>(entity: EntityId, component: ComponentId): T {
-		let data = this.components[component]?.[entity];
+		let data = this.components[entity]?.[component];
 
 		if (data === undefined) {
 			throw new MissingComponentError(entity, component);
@@ -46,9 +46,9 @@ export class ComponentManager {
 		return mask;
 	}
 
-	private ensureArrays(entity: EntityId, component: ComponentId) {
-		if (this.components[component] === undefined) {
-			this.components[component] = [];
+	private ensureArrays(entity: EntityId) {
+		if (this.components[entity] === undefined) {
+			this.components[entity] = [];
 		}
 
 		if (this.masks[entity] === undefined) {
@@ -57,23 +57,36 @@ export class ComponentManager {
 	}
 
 	public add(entity: EntityId, component: ComponentId, data: any) {
-		this.ensureArrays(entity, component);
+		this.ensureArrays(entity);
 
-		this.components[component]![entity] = onChange(data, () => {
+		this.components[entity]![component] = onChange(data, () => {
 			this.onChange(entity, component);
 		});
-		this.masks[entity]!.set(component, true);
+		this.getMask(entity)!.set(component, true);
 
 		this.onAdd(entity, component);
 	}
 
 	public remove(entity: EntityId, component: ComponentId) {
-		this.ensureArrays(entity, component);
+		this.ensureArrays(entity);
 
-		delete this.components[component]![entity];
-		this.masks[entity]!.set(component, false);
+		delete this.components[entity]![component];
+		this.getMask(entity)!.set(component, false);
 
 		this.onRemove(entity, component);
+	}
+
+	public removeAll(entity: EntityId) {
+		this.ensureArrays(entity);
+
+		for (let indexKey in this.components[entity]!) {
+			let componentId = parseInt(indexKey) as ComponentId;
+
+			delete this.components[entity]![componentId];
+			this.onRemove(entity, componentId);
+		}
+
+		delete this.masks[entity];
 	}
 
 	public registerChangeHandler(component: ComponentId, handler: ChangeHandler) {

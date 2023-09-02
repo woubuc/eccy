@@ -39,19 +39,8 @@ export class World {
 	 */
 	public applyPending(cmd: SystemCommands) {
 		for (let e of cmd.entities) {
-			let entity = e.id;
-
 			for (let change of e.pending) {
-				if ('add' in change) {
-					let id = componentRegistry.lookupId(change.add.constructor);
-					this.components.add(entity, id, change.add);
-					continue;
-				}
-
-				if ('remove' in change) {
-					this.components.remove(entity, change.remove);
-					continue;
-				}
+				change.execute(this);
 			}
 		}
 

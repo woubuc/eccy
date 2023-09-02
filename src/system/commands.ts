@@ -40,6 +40,11 @@ export interface EntityCommands {
 	 * Remove one or more components from an entity
 	 */
 	remove(...components: Class<any>[]): this;
+
+	/**
+	 * Remove the entire entity and all its components
+	 */
+	despawn(): void;
 }
 
 export class SystemCommands implements Commands {
@@ -61,28 +66,63 @@ export class SystemCommands implements Commands {
 }
 
 
-type EntityChanges = { add: any } | { remove: ComponentId };
-
 export class SystemEntityCommands implements EntityCommands {
 
-	public pending: EntityChanges[] = [];
+	public pending: Command[] = [];
 
 	public constructor(public readonly id: EntityId) {}
 
 	public add(...components: any[]): this {
-		for (let component of components) {
-			this.pending.push({ add: component });
-		}
+		this.pending.push(new AddComponentsCommand(this.id, components));
 		return this;
 	}
 
 	public remove(...components: Class<any>[]): this {
-		for (let component of components) {
-			let id = componentRegistry.lookupId(component);
-			this.pending.push({ remove: id });
-		}
+		let componentIds = components.map(c => componentRegistry.lookupId(c));
+		this.pending.push(new RemoveComponentsCommand(this.id, componentIds));
 		return this;
+	}
+
+	public despawn(): void {
+		this.pending.push(new DespawnEntityCommand(this.id));
 	}
 }
 
 
+interface Command {
+	execute(world: World): void;
+}
+
+class AddComponentsCommand implements Command {
+	public constructor(
+		private readonly entity: EntityId,
+		private readonly components: any[],
+	) {}
+
+	public execute(world: World): void {
+		for (let data of this.components) {
+			let id = componentRegistry.lookupId(data.constructor);
+			world.components.add(this.entity, id, data);
+		}
+	}
+}
+
+class RemoveComponentsCommand implements Command {
+	public constructor(
+		private readonly entity: EntityId,
+		private readonly componentIds: ComponentId[],
+	) {}
+	public execute(world: World): void {
+		for (let id of this.componentIds) {
+			world.components.remove(this.entity, id);
+		}
+	}
+}
+
+class DespawnEntityCommand implements Command {
+	public constructor(private readonly entity: EntityId) {}
+
+	public execute(world: World): void {
+		world.components.removeAll(this.entity);
+	}
+}
