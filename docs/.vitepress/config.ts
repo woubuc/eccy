@@ -6,6 +6,7 @@ export default defineConfig({
 	description: 'Yet Another ECS Library',
 
 	srcDir: 'src/',
+	base: '/eccy/',
 
 	themeConfig: {
 		sidebar: [
