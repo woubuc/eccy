@@ -30,7 +30,6 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "test": "pnpm build && c8 \"ava dist/**/*.test.js\" --src=dist --all",
-    "preinstall": "npx only-allow pnpm",
     "prepack": "pnpm test && pnpm build"
   },
   "engines": {
