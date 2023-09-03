@@ -7,6 +7,7 @@ let bench = new Bench({
 	time: 2_000,
 });
 
+bench.add('no-op', () => {});
 
 @component()
 class Counter {
