@@ -1,15 +1,19 @@
 # Eccy
+
 [![npm](https://img.shields.io/npm/v/eccy?style=for-the-badge)](https://www.npmjs.com/package/eccy)
 
 *Yet Another ECS Library*
 
 ## Status
+
 Very experimental, early development. You probably shouldn't use this for any real stuff just yet.
 
 ## How to use
 
 ##### 1. Define a component
+
 A component can be any class.
+
 ```ts
 // Define a component
 @component()
@@ -22,6 +26,7 @@ class Position {
 ```
 
 ##### 2. Define some systems
+
 ```ts
 class RenderSystem extends System {
   // Create your queries
@@ -47,6 +52,7 @@ class StartupSystem extends System {
 ```
 
 ##### 3. Configure the engine
+
 ```ts
 let engine = new Engine()
   .system(StartupSystem, RenderSystem)
@@ -54,6 +60,7 @@ let engine = new Engine()
 ```
 
 ##### 4. Ready, set, go!
+
 ```ts
 await engine.run(60); // Try to run at 60 fps
 ```

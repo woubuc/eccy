@@ -5,7 +5,6 @@ export default defineConfig({
 	title: 'Eccy',
 	description: 'Yet Another ECS Library',
 
-	srcDir: 'src/',
 	base: '/eccy/',
 
 	themeConfig: {
