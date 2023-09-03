@@ -4,6 +4,9 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
 	title: 'Eccy',
 	description: 'Yet Another ECS Library',
+
+	srcDir: 'src/',
+
 	themeConfig: {
 		sidebar: [
 			{
